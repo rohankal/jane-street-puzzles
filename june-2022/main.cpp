@@ -44,7 +44,7 @@ void populatePuzzle()
             {
                 possibleValues.insert(i);
             }
-            PuzzleCell cell = {value, possibleValues, region, currentRow, currentCol, false};
+            PuzzleCell cell = {value, possibleValues, region, currentRow, currentCol, finalized};
 
             puzzle[currentRow][currentCol] = cell;
             currentCol++;
