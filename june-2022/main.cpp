@@ -95,17 +95,41 @@ int calculateAnswer()
     return toRet;
 }
 
-bool isSafe(int row, int col, int num)
+bool beenUsed(int row, int col, int num)
 {
     set<int> used = regionUsed[puzzle[row][col].region];
     cout << "Used Set: " << used << endl;
-    if (used.find(num) != used.end())
+    if (used.find(num) == used.end())
     {
         return false;
     }
     return true;
 }
 
+bool isSafe(int row, int col, int num)
+{
+    int minTaxicabDistance = INT_MAX;
+    int currentTaxicabDistance;
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            if (puzzle[i][j].assignedValue == num)
+            {
+                currentTaxicabDistance = abs(i - row) + abs(j - col);
+                if (currentTaxicabDistance < minTaxicabDistance)
+                {
+                    minTaxicabDistance = currentTaxicabDistance;
+                }
+            }
+        }
+    }
+    if (minTaxicabDistance >= num)
+    {
+        return true;
+    }
+    return false;
+}
 bool solvePuzzle(int row, int col)
 {
     if (row == N - 1 && col == N)
@@ -124,20 +148,23 @@ bool solvePuzzle(int row, int col)
 
     for (auto num : possibleNumbers)
     {
-        cout << num << " " << endl;
-        if (isSafe(row, col, num))
+        if (beenUsed(row, col, num))
         {
-            puzzle[row][col].assignedValue = num;
-            regionUsed[puzzle[row][col].region].insert(num);
-            displayPuzzle();
-            cout << endl;
-            if (solvePuzzle(row, col + 1))
-                return true;
+            continue;
         }
         else
         {
-            regionUsed[puzzle[row][col].region].erase(num);
-            puzzle[row][col].assignedValue = 0;
+            if (isSafe(row, col, num))
+            {
+                puzzle[row][col].assignedValue = num;
+                regionUsed[puzzle[row][col].region].insert(num);
+                displayPuzzle();
+                cout << endl;
+                if (solvePuzzle(row, col + 1))
+                    return true;
+                regionUsed[puzzle[row][col].region].erase(num);
+                puzzle[row][col].assignedValue = 0;
+            }
         }
     }
     return false;
