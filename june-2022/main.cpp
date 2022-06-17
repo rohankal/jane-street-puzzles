@@ -62,11 +62,9 @@ void populatePuzzle()
     ifstream instream("examplePS.txt");
     while (getline(instream, line))
     {
-        cout << line << endl;
         int value = (int)(line.at(0)) - 48;
         int row = (int)line.at(1) - 48;
         int col = (int)line.at(2) - 48;
-        cout << row << " " << col << " " << value << endl;
         puzzle[row][col].assignedValue = value;
     }
 }
@@ -135,14 +133,24 @@ bool isSafe(int row, int col, int num)
             }
         }
     }
-    if (minTaxicabDistance == num || minTaxicabDistance == INT_MAX)
+    cout << "The nearest " << num << " via taxicab distance is " << minTaxicabDistance << endl;
+    if (minTaxicabDistance < num)
     {
-        return true;
+        return false;
     }
-    return false;
+    return true;
+    // else if (minTaxicabDistance == num || minTaxicabDistance == INT_MAX)
+    // {
+    //     return true;
+    // }
+    // else
+    // {
+    //     return false;
+    // }
 }
 bool solvePuzzle(int row, int col)
 {
+
     if (row == N - 1 && col == N)
         return true;
 
@@ -185,13 +193,13 @@ int main()
 {
     populatePuzzle();
     displayPuzzle();
-    // if (solvePuzzle(0, 0))
-    // {
-    //     cout << calculateAnswer() << endl;
-    // }
-    // else
-    // {
-    //     cout << "There is no solution to this particular puzzle." << endl;
-    // }
-    // return 0;
+    if (solvePuzzle(0, 0))
+    {
+        cout << calculateAnswer() << endl;
+    }
+    else
+    {
+        cout << "There is no solution to this particular puzzle." << endl;
+    }
+    return 0;
 }
